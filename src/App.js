@@ -3,12 +3,13 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import About from './components/AboutComponent/About';
+import Services from './components/ServicesComponent/Services';
 import Header from "./components/HeaderComponent/Header";
 import Hero from "./components/HeroComponent/Hero";
 import Appointment from "./components/AppointmentComponent/Appointment";
 import Contact from "./components/ContactComponent/Contact";
 import Footer from "./components/FooterComponent/Footer";
+import Doctors from "./components/DoctorsComponent/Doctors";
 
 function App() {
   useEffect(() => {
@@ -22,9 +23,10 @@ function App() {
     </Routes>
   <main className="main">
     <Routes>
-      <Route path="/about" element={<About />} />
+      <Route path="/services" element={<Services />} />
       <Route path="/appointment" element={<Appointment />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/doctors" element={<Doctors />} />
     </Routes>
   </main>
 <Footer />

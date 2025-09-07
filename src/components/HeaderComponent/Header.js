@@ -34,9 +34,9 @@ function Header() {
         <nav id="navmenu" className="navmenu">
           <ul>
             <li><Link to="/">Home</Link>  </li>
-            <li><Link to="/about">About Us</Link>  </li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#doctors">Doctors</a></li>
+          
+            <li><Link to="/services">Services</Link></li>
+            <li><Link to="/doctors">Doctors</Link></li>
             <li className="dropdown"><a href="#"><span>Account</span> <i className="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
                 <li><a href="#">Register</a></li>
