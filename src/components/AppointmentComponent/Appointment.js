@@ -1,150 +1,98 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
+import * as faceapi from "face-api.js";
 
-function SymptomScan() {
+function Appointment() {
   const webcamRef = useRef(null);
-  const [capturedImage, setCapturedImage] = useState(null);
-  const [cameraOn, setCameraOn] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [expression, setExpression] = useState("Detecting...");
+  const [dosha, setDosha] = useState("Analyzing...");
+  const [recommendation, setRecommendation] = useState("");
 
-  const capturePhoto = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setCapturedImage(imageSrc);
-    setCameraOn(false); // Close camera after capture
+  useEffect(() => {
+    const loadModels = async () => {
+      const MODEL_URL = process.env.PUBLIC_URL + "/models";
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+      setModelsLoaded(true);
+    };
+    loadModels();
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (modelsLoaded) {
+      interval = setInterval(async () => {
+        if (
+          webcamRef.current &&
+          webcamRef.current.video.readyState === 4
+        ) {
+          const video = webcamRef.current.video;
+          const detections = await faceapi
+            .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+            .withFaceExpressions();
+
+          if (detections && detections.expressions) {
+            const best = Object.entries(detections.expressions).reduce(
+              (a, b) => (a[1] > b[1] ? a : b)
+            );
+            const emotion = best[0]; // happy, sad, angry, etc.
+            setExpression(emotion);
+            mapEmotionToDosha(emotion);
+          }
+        }
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [modelsLoaded]);
+
+  const mapEmotionToDosha = (emotion) => {
+    let d = "Balanced";
+    let rec = "Keep up your healthy lifestyle! 🌿";
+
+    if (emotion === "angry" || emotion === "fearful") {
+      d = "Pitta imbalance";
+      rec = "Try cooling therapies like Shirodhara, meditation, and avoid spicy food. 🧘‍♂️";
+    } else if (emotion === "sad" || emotion === "disgusted") {
+      d = "Kapha imbalance";
+      rec = "Do yoga, eat light meals, and energize with herbs like Trikatu. 🥗";
+    } else if (emotion === "surprised") {
+      d = "Vata imbalance";
+      rec = "Follow grounding routines, warm food, and oil massage. 💆‍♀️";
+    } else if (emotion === "happy" || emotion === "neutral") {
+      d = "Balanced Doshas";
+      rec = "Maintain your lifestyle, you are in good health. 🌸";
+    }
+
+    setDosha(d);
+    setRecommendation(rec);
   };
 
   return (
-    <>
-      {/* Symptom Scan Section */}
-      <section id="symptom-scan" className="appointment section">
-        <div className="container">
-          <form className="php-email-form">
-            
-            {/* Face Scan Capture */}
-            <div className="row">
-              <div className="col-md-12 form-group text-center">
-                <h3>AI Face Scan</h3>
-                <p>Scan your face for symptoms and stress detection.</p>
+    <section id="symptom-scan" className="appointment section">
+      <div className="container text-center">
+        <h3>AI Face Scan for Dosha Detection</h3>
+        <p>Real-time emotion → Dosha mapping based on Ayurveda principles.</p>
 
-                {/* Show button first */}
-                {!cameraOn && !capturedImage && (
-                  <button
-                    type="button"
-                    className="btn btn-primary mt-3"
-                    onClick={() => setCameraOn(true)}
-                  >
-                    Start Camera
-                  </button>
-                )}
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          width={400}
+          height={300}
+          className="rounded shadow"
+        />
 
-                {/* Camera feed */}
-                {cameraOn && (
-                  <>
-                    <Webcam
-                      audio={false}
-                      ref={webcamRef}
-                      screenshotFormat="image/jpeg"
-                      width="100%"
-                      className="img-fluid rounded shadow mt-3"
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-success mt-3"
-                      onClick={capturePhoto}
-                    >
-                      Capture Face
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary mt-3 ms-2"
-                      onClick={() => setCameraOn(false)}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                )}
-
-                {/* Show captured image */}
-                {capturedImage && !cameraOn && (
-                  <>
-                    <img
-                      src={capturedImage}
-                      alt="Captured"
-                      className="img-fluid rounded shadow mt-3"
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-secondary mt-3"
-                      onClick={() => setCapturedImage(null)}
-                    >
-                      Retake
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Symptom Questionnaire */}
-            <div className="row mt-4">
-              <div className="col-md-6 form-group">
-                <label htmlFor="sleep">How is your sleep quality?</label>
-                <select name="sleep" id="sleep" className="form-select" required>
-                  <option value="">Select</option>
-                  <option value="good">Good</option>
-                  <option value="disturbed">Disturbed</option>
-                  <option value="insomnia">Insomnia</option>
-                </select>
-              </div>
-
-              <div className="col-md-6 form-group">
-                <label htmlFor="stress">How stressed do you feel?</label>
-                <select name="stress" id="stress" className="form-select" required>
-                  <option value="">Select</option>
-                  <option value="low">Low</option>
-                  <option value="moderate">Moderate</option>
-                  <option value="high">High</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="row mt-3">
-              <div className="col-md-6 form-group">
-                <label htmlFor="digestion">How is your digestion?</label>
-                <select name="digestion" id="digestion" className="form-select" required>
-                  <option value="">Select</option>
-                  <option value="normal">Normal</option>
-                  <option value="slow">Slow</option>
-                  <option value="irregular">Irregular</option>
-                </select>
-              </div>
-
-              <div className="col-md-6 form-group">
-                <label htmlFor="energy">Energy Levels</label>
-                <select name="energy" id="energy" className="form-select" required>
-                  <option value="">Select</option>
-                  <option value="high">High</option>
-                  <option value="balanced">Balanced</option>
-                  <option value="low">Low</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group mt-3">
-              <textarea
-                className="form-control"
-                name="notes"
-                rows="4"
-                placeholder="Additional notes (optional)"
-              ></textarea>
-            </div>
-
-            <div className="text-center mt-4">
-              <button type="submit">Analyze & Get Recommendations</button>
-            </div>
-          </form>
-        </div>
-      </section>
-    </>
+        <h4 className="mt-3">
+          Expression: <span className="text-primary">{expression}</span>
+        </h4>
+        <h4>
+          Dosha: <span className="text-danger">{dosha}</span>
+        </h4>
+        <p className="mt-2">{recommendation}</p>
+      </div>
+    </section>
   );
 }
 
-export default SymptomScan;
+export default Appointment;
