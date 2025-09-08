@@ -1,72 +1,91 @@
 import { Link } from "react-router-dom";
 
 function Header() {
-  
   return (
     <>
-    
- <header id="header" className="header sticky-top">
+      <header id="header" className="header sticky-top">
 
-    <div className="topbar d-flex align-items-center">
-      <div className="container d-flex justify-content-center justify-content-md-between">
-        <div className="contact-info d-flex align-items-center">
-          <i className="bi bi-envelope d-flex align-items-center"><a href="mailto:svasthik@gmail.com">svasthik@gmail.com</a></i>
-          <i className="bi bi-phone d-flex align-items-center ms-4"><span>+91 9876543210</span></i>
+        {/* Top Bar */}
+        <div className="topbar d-flex align-items-center">
+          <div className="container d-flex justify-content-center justify-content-md-between">
+            <div className="contact-info d-flex align-items-center">
+              <i className="bi bi-envelope d-flex align-items-center">
+                <a href="mailto:svasthik@gmail.com">svasthik@gmail.com</a>
+              </i>
+              <i className="bi bi-phone d-flex align-items-center ms-4">
+                <span>+91 9876543210</span>
+              </i>
+            </div>
+            <div className="social-links d-none d-md-flex align-items-center">
+              <a href="#" className="twitter"><i className="bi bi-twitter-x"></i></a>
+              <a href="#" className="facebook"><i className="bi bi-facebook"></i></a>
+              <a href="#" className="instagram"><i className="bi bi-instagram"></i></a>
+              <a href="#" className="linkedin"><i className="bi bi-linkedin"></i></a>
+            </div>
+          </div>
         </div>
-        <div className="social-links d-none d-md-flex align-items-center">
-          <a href="#" className="twitter"><i className="bi bi-twitter-x"></i></a>
-          <a href="#" className="facebook"><i className="bi bi-facebook"></i></a>
-          <a href="#" className="instagram"><i className="bi bi-instagram"></i></a>
-          <a href="#" className="linkedin"><i className="bi bi-linkedin"></i></a>
-        </div>
-      </div>
-    </div>{/* End Top Bar */}
+        {/* End Top Bar */}
 
-    <div className="branding d-flex align-items-center">
+        {/* Navbar / Branding */}
+        <div className="branding d-flex align-items-center" style={{ backgroundColor: "white" }}>
+          <div className="container position-relative d-flex align-items-center justify-content-between">
 
-      <div className="container position-relative d-flex align-items-center justify-content-between">
-        <a href="index.html" className="logo d-flex align-items-center me-auto">
-          {/* Uncomment the line below if you also wish to use an image logo */}
-          {/* <img src="assets/img/logo.png" alt=""> */}
-          <h1 className="sitename">Svasthik</h1>
-        </a>
+            <a href="index.html" className="logo d-flex align-items-center me-auto">
+              <h1 className="sitename">Svasthik</h1>
+            </a>
 
-        <nav id="navmenu" className="navmenu">
-          <ul>
-            <li><Link to="/">Home</Link>  </li>
-          
-            <li><Link to="/services">Services</Link></li>
-            <li><Link to="/doctors">Doctors</Link></li>
-            <li className="dropdown"><a href="#"><span>Account</span> <i className="bi bi-chevron-down toggle-dropdown"></i></a>
+            <nav id="navmenu" className="navmenu">
               <ul>
-                <li><a href="#">Register</a></li>
-                <li className="dropdown"><a href="#"><span>Login</span> <i className="bi bi-chevron-down toggle-dropdown"></i></a>
+                <li><Link to="/" style={{ color: "#000" }}>Home</Link></li>
+                <li><Link to="/services" style={{ color: "#000" }}>Services</Link></li>
+                <li><Link to="/doctors" style={{ color: "#000" }}>Doctors</Link></li>
+                <li className="dropdown">
+                  <a href="#" style={{ color: "#000" }}>
+                    <span>Account</span> <i className="bi bi-chevron-down toggle-dropdown"></i>
+                  </a>
                   <ul>
-                    <li><Link to="/patient-login">Patient Login</Link></li>
-                    <li><Link to="/doctor-login">Doctor Login</Link></li>
-
+                    <li><Link to="/register" style={{ color: "#000" }}>Register</Link></li>
+                    <li><Link to="/login" style={{ color: "#000" }}>Login</Link></li>
                   </ul>
                 </li>
+                <li><Link to="/contact" style={{ color: "#000" }}>Contact</Link></li>
               </ul>
-            </li>
-            <li><Link to="/contact">Contact</Link></li>
-          </ul>
-          <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
+              <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
 
-        <Link className="cta-btn d-none d-sm-block" to="appointment">Make an Appointment</Link>
+            <Link
+              className="cta-btn d-none d-sm-block"
+              to="/appointment"
+              style={{
+                backgroundColor: "#007bff",
+                color: "#fff",
+                padding: "8px 15px",
+                borderRadius: "5px",
+                textDecoration: "none",
+              }}
+            >
+              Make an Appointment
+            </Link>
 
-      </div>
+          </div>
+        </div>
 
-    </div>
+      </header>
 
-  </header>
-    
-
-    
+      {/* Inner CSS */}
+      <style>
+        {`
+          .navmenu ul li a:hover {
+            color: #007bff;
+          }
+          .cta-btn:hover {
+            background-color: #0056b3;
+            color: #fff;
+          }
+        `}
+      </style>
     </>
   );
 }
-
 
 export default Header;

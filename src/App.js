@@ -10,6 +10,13 @@ import Appointment from "./components/AppointmentComponent/Appointment";
 import Contact from "./components/ContactComponent/Contact";
 import Footer from "./components/FooterComponent/Footer";
 import Doctors from "./components/DoctorsComponent/Doctors";
+import PatientDashBoard from "./components/PatientDashBoardComponent/PatientDashBoard";
+import DoctorsDashboard from "./components/DoctorsDashBoardComponent/DoctorsDashBoard";
+import AdminDashboard from "./components/AdminsDashBoardComponent/AdminsDashBoard";
+import Register from "./components/RegisterComponent/Register";
+import Login from "./components/LoginComponent/Login";
+import GeminiChatBot from "./components/AIChatbotComponent/AIChatbot";
+
 
 function App() {
   useEffect(() => {
@@ -27,6 +34,12 @@ function App() {
       <Route path="/appointment" element={<Appointment />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/doctors" element={<Doctors />} />
+      <Route path="/patient-dashboard" element={<PatientDashBoard />} />
+      <Route path="/doctor-dashboard" element={<DoctorsDashboard />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/chatbot" element={<GeminiChatBot />} />
     </Routes>
   </main>
 <Footer />
